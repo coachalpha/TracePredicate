@@ -98,6 +98,11 @@ class WeightOptimizer:
             'objective': objective
         })
         
+        # Update best correlation if improved
+        if abs(correlation) > self.best_correlation:
+            self.best_correlation = abs(correlation)
+            self.best_weights = weights.copy()
+        
         return objective
     
     def optimize_weights_scipy(

@@ -59,12 +59,22 @@ class SemanticDistanceCalculator:
         elif self.model_type == "biobert":
             try:
                 from transformers import AutoTokenizer, AutoModel
+                import torch
+                
                 model_name = "dmis-lab/biobert-base-cased-v1.1"
                 self.biobert_tokenizer = AutoTokenizer.from_pretrained(model_name)
                 self.biobert_model = AutoModel.from_pretrained(model_name)
-                logger.info("Initialized BioBERT model for semantic analysis")
+                self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+                self.biobert_model.to(self.device)
+                self.biobert_model.eval()
+                
+                logger.info(f"Initialized BioBERT model for semantic analysis on {self.device}")
             except ImportError:
                 logger.warning("Transformers not available, falling back to TF-IDF")
+                self.model_type = "tfidf"
+                self._initialize_model()
+            except Exception as e:
+                logger.warning(f"BioBERT initialization failed: {e}, falling back to TF-IDF")
                 self.model_type = "tfidf"
                 self._initialize_model()
     
