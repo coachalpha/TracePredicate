@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-完整API数据获取器：突破1000条限制，获取所有真实数据
-=======================================================
+Complete API Data Fetcher: Bypass 1000-record limit, collect all real data
+=========================================================================
 
-解决方案：
-1. 使用skip参数批量获取绕过1000条限制
-2. 修复数据关联性问题确保逻辑一致性
-3. 澄清LDI方法论并统一公式定义
-4. 基于完整无偏数据重新运行分析
+Solution:
+1. Use skip parameter for batch collection to bypass 1000-record limit
+2. Fix data relationship issues to ensure logical consistency
+3. Clarify LDI methodology and unify formula definitions
+4. Re-run analysis based on complete unbiased data
 """
 
 import requests
@@ -26,47 +26,60 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 class CompleteAPIDataFetcher:
-    """完整的API数据获取器，突破所有限制"""
+    """Complete API data fetcher that bypasses all limits"""
     
     def __init__(self):
-        self.cache_dir = Path("complete_fda_data")
+        self.cache_dir = Path("data/real_fda_dataset")
         self.cache_dir.mkdir(exist_ok=True)
-        self.results_dir = Path("complete_analysis_results")
+        self.results_dir = Path("results/expanded_dataset")
         self.results_dir.mkdir(exist_ok=True)
         
         self.base_url = "https://api.fda.gov"
-        self.rate_limit_delay = 1.5  # 增加延迟确保API稳定性
-        self.api_limit = 1000  # FDA API硬限制
+        self.rate_limit_delay = 1.5  # Increased delay to ensure API stability
+        self.api_limit = 1000  # FDA API hard limit
         self.max_retries = 3
         
-        # 主要510(k)设备类别的精确产品代码
+        # Primary 510(k) device categories with precise product codes
         self.device_categories = {
-            # 骨科设备 - 真正的高风险类别
+            # Orthopedic Devices - High-risk categories
             'KWA': 'Hip Prostheses (Orthopedic)',
             'KWP': 'Knee Prostheses (Orthopedic)', 
             'KWF': 'Shoulder Prostheses (Orthopedic)',
             'HRS': 'Bone Plates/Screws (Orthopedic)',
             'HWC': 'Bone Drill (Orthopedic)',
             
-            # 影像设备
+            # Imaging Devices
             'LNH': 'MRI Systems (Radiology)',
             'IYE': 'Ultrasound Systems (Radiology)',
             'JAK': 'X-ray Systems (Radiology)',
             
-            # 高风险生命支持设备
+            # Life-Critical Support Devices
             'FRN': 'Infusion Pumps (Critical Care)',
             'BTO': 'Ventilators (Critical Care)',
             
-            # 其他重要类别
+            # Cardiovascular Devices - TIER 1 HIGH PRIORITY
+            'NIK': 'Pacemaker Pulse Generator (Cardiovascular)',  # 158,700 records
+            'DTK': 'Coronary Stent (Cardiovascular)',            # 37,978 records  
+            'MHX': 'Implantable Defibrillator (Cardiovascular)', # 27,431 records
             'DQO': 'Catheters (Cardiovascular)',
+            
+            # Surgical Devices - TIER 2 STRATEGIC
+            'FDS': 'Endoscope (Surgical)',                       # 36,876 records
+            'LZO': 'Surgical Robot (Surgical)',                 # 29,813 records
+            
+            # Other Important Categories
             'ETA': 'Hearing Aids (ENT)',
-            'IOL': 'Intraocular Lenses (Ophthalmic)'
+            'IOL': 'Intraocular Lenses (Ophthalmic)',
+            
+            # Specialized Research Categories - TIER 3
+            'GDT': 'Insulin Pump (Endocrine)',                  # 4,656 records
+            'GAL': 'Breast Prosthesis (Plastic Surgery)'        # 2,357 records
         }
 
     def fetch_complete_dataset_for_category(self, product_code: str, category_name: str) -> Dict:
-        """为单个类别获取完整数据集，突破1000条限制"""
+        """Fetch complete dataset for a single category, bypassing 1000-record limit"""
         
-        logger.info(f"\n🔍 开始完整数据收集: {product_code} ({category_name})")
+        logger.info(f"\n🔍 Starting complete data collection: {product_code} ({category_name})")
         
         category_data = {
             'product_code': product_code,
@@ -77,24 +90,24 @@ class CompleteAPIDataFetcher:
             'recall_data': []
         }
         
-        # 1. 收集所有510(k)数据
-        logger.info(f"📋 收集510(k)数据...")
+        # 1. Collect all 510(k) data
+        logger.info(f"📋 Collecting 510(k) data...")
         category_data['510k_data'] = self.fetch_all_paginated_data(
             endpoint='device/510k.json',
             search_param=f'product_code:{product_code}',
             data_type='510(k)'
         )
         
-        # 2. 收集所有MAUDE数据
-        logger.info(f"⚠️  收集MAUDE数据...")
+        # 2. Collect all MAUDE data
+        logger.info(f"⚠️  Collecting MAUDE data...")
         category_data['maude_data'] = self.fetch_all_paginated_data(
             endpoint='device/event.json',
             search_param=f'device.device_report_product_code:{product_code}',
             data_type='MAUDE'
         )
         
-        # 3. 收集所有召回数据
-        logger.info(f"🚨 收集召回数据...")
+        # 3. Collect all recall data
+        logger.info(f"🚨 Collecting recall data...")
         category_data['recall_data'] = self.fetch_all_paginated_data(
             endpoint='device/recall.json',
             search_param=f'product_code:{product_code}',
