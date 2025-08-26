@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """
-TracePredicate: Phase 2 - 分层交叉验证研究
-Phase 2 - Stratified Cross-Validation Research (12-24 months)
+TracePredicate: Phase 2 - Stratified Cross-Validation Research (12-24 months)
 
-实现原始研究计划第二阶段：
-- 样本分层验证策略
-- 监管强度调节空间三角图
-- 监管强度调节因子(RSM)建模
-- Predicate Creep风险调节空间分析
+Implements the second stage of the original research plan:
+- Sample stratification validation strategy
+- Regulatory strength modulation space triangular diagram
+- Regulatory Strength Modulation (RSM) factor modeling
+- Predicate Creep risk modulation space analysis
 """
 
 import json
@@ -27,17 +26,17 @@ from sklearn.ensemble import RandomForestRegressor
 import warnings
 warnings.filterwarnings('ignore')
 
-# 中文字体设置
-plt.rcParams['font.sans-serif'] = ['Arial Unicode MS', 'SimHei', 'DejaVu Sans']
+# Font settings for visualization
+plt.rcParams['font.sans-serif'] = ['Arial', 'DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
 
 class Phase2StratifiedValidator:
-    """Phase 2 分层交叉验证分析器"""
+    """Phase 2 Stratified Cross-Validation Analyzer"""
     
     def __init__(self):
-        """初始化Phase 2分析器"""
-        self.complete_data_dir = Path("complete_fda_data")
-        self.phase1_results_dir = Path("final_research_completion")
+        """Initialize Phase 2 analyzer"""
+        self.complete_data_dir = Path("data/real_fda_dataset")
+        self.phase1_results_dir = Path("results/phase1_completion")
         self.results_dir = Path("phase2_stratified_validation")
         self.results_dir.mkdir(exist_ok=True)
         

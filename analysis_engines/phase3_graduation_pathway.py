@@ -1,52 +1,48 @@
 #!/usr/bin/env python3
 """
-TracePredicate: Phase 3 - 毕业路径研究 (24-36个月)
-Phase 3 - Graduation Pathway Research (24-36 months)
+TracePredicate: Phase 3 - Graduation Pathway Research (24-36 months)
 
-实现原始研究计划第三阶段：
-- 路径A：实证主义毕业 (高可行性)
-- 工具开发：FastAPI + Streamlit Web应用原型
-- XAI可解释性AI集成
-- 顶刊论文准备
-- FDA政策建议
+Implements the third phase of the original research plan:
+- Path A: Empirical Graduation (High Feasibility)
+- Tool Development: FastAPI + Streamlit Web Application Prototype
+- XAI Explainable AI Integration
+- Top-tier Journal Paper Preparation
+- FDA Policy Recommendations
 """
 
 import json
-import pandas as pd
 import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
-import seaborn as sns
 from datetime import datetime
-from typing import Dict, List, Tuple, Any, Optional
-from scipy import stats
+from typing import Dict, Tuple, Any
 import warnings
 warnings.filterwarnings('ignore')
 
-# 中文字体设置
-plt.rcParams['font.sans-serif'] = ['Arial Unicode MS', 'SimHei', 'DejaVu Sans']
+# Font settings for visualization
+plt.rcParams['font.sans-serif'] = ['Arial', 'DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
 
 class Phase3GraduationPathway:
-    """Phase 3 毕业路径分析器"""
+    """Phase 3 Graduation Pathway Analyzer"""
     
     def __init__(self):
-        """初始化Phase 3分析器"""
-        self.phase2_results_dir = Path("phase2_stratified_validation")
+        """Initialize Phase 3 analyzer"""
+        self.phase2_results_dir = Path("results/phase2_validation")
         self.results_dir = Path("phase3_graduation_pathway")
         self.results_dir.mkdir(exist_ok=True)
         
-        # Phase 3 研究配置
+        # Phase 3 research configuration
         self.phase3_config = {
-            "graduation_pathway": "Path A: 实证主义毕业 (高可行性)",
+            "graduation_pathway": "Path A: Empirical Graduation (High Feasibility)",
             "deliverables": {
                 "web_application": {
                     "technology_stack": "FastAPI + Streamlit",
-                    "features": ["风险评估界面", "LDI计算器", "监管建议生成", "可视化仪表板"]
+                    "features": ["Risk Assessment Interface", "LDI Calculator", "Regulatory Recommendations", "Visualization Dashboard"]
                 },
                 "xai_integration": {
-                    "framework": "SHAP-like 可解释性",
-                    "capabilities": ["风险因子解释", "LDI组件贡献", "监管建议依据", "决策透明度"]
+                    "framework": "SHAP-like Explainability",
+                    "capabilities": ["Risk Factor Explanation", "LDI Component Attribution", "Regulatory Recommendation Basis", "Decision Transparency"]
                 },
                 "top_journal_paper": {
                     "target_journals": ["JAMA", "The Lancet Digital Health", "Health Affairs"],
@@ -55,38 +51,36 @@ class Phase3GraduationPathway:
                 },
                 "fda_policy_recommendations": {
                     "target_audience": "FDA CDRH",
-                    "recommendation_types": ["LDI阈值设定", "监管强度调整", "风险分层指导"]
+                    "recommendation_types": ["LDI Threshold Setting", "Regulatory Intensity Adjustment", "Risk Stratification Guidance"]
                 }
             }
         }
         
     def load_phase2_results(self) -> Tuple[Dict, Dict]:
-        """加载Phase 2结果"""
-        print("🔄 加载Phase 2分层验证结果...")
+        """Load Phase 2 results"""
+        print("🔄 Loading Phase 2 stratified validation results...")
         
-        # 加载Phase 2结果
+        # Load Phase 2 results
         phase2_file = self.phase2_results_dir / "phase2_complete_results.json"
         if not phase2_file.exists():
-            raise FileNotFoundError("需要先完成Phase 2分析")
+            raise FileNotFoundError("Phase 2 analysis must be completed first")
         
         with open(phase2_file, 'r', encoding='utf-8') as f:
             phase2_data = json.load(f)
         
-        # 加载Phase 1的统一LDI结果作为基础
-        unified_file = Path("unified_analysis_results") / "final_unified_ldi_complete_results.json"
+        # Load Phase 1 unified LDI results as foundation
+        unified_file = Path("results/unified_analysis") / "final_unified_ldi_complete_results.json"
         with open(unified_file, 'r', encoding='utf-8') as f:
             unified_data = json.load(f)
         
-        print(f"✅ Phase 2结果加载成功")
+        print(f"✅ Phase 2 results loaded successfully")
         return phase2_data, unified_data
     
     def develop_web_application_prototype(self, phase2_data: Dict, unified_data: Dict) -> Dict[str, Any]:
-        """开发Web应用原型设计"""
-        print("\n🌐 开发Web应用原型设计...")
+        """Develop web application prototype design"""
+        print("\n🌐 Developing web application prototype design...")
         
-        # 提取核心数据用于Web应用
-        ldi_results = unified_data['ldi_results']
-        rsm_results = phase2_data['rsm_results']
+        # Extract core data for web application
         
         web_app_spec = {
             "application_name": "TracePredicate Risk Assessment Platform",
@@ -103,53 +97,53 @@ class Phase3GraduationPathway:
             "api_endpoints": {}
         }
         
-        # 1. 核心功能设计
-        print("  🎯 设计核心功能模块")
+        # 1. Core feature design
+        print("  🎯 Designing core feature modules")
         
         web_app_spec["core_features"] = {
             "ldi_calculator": {
-                "description": "实时LDI风险计算器",
-                "inputs": ["设备类别", "510(k)数量", "MAUDE事件", "召回记录"],
-                "outputs": ["LDI分数", "风险等级", "组件分析", "同类比较"],
-                "algorithm": "统一LDI 2.0 FINAL + 优化权重"
+                "description": "Real-time LDI risk calculator",
+                "inputs": ["Device Category", "510(k) Count", "MAUDE Events", "Recall Records"],
+                "outputs": ["LDI Score", "Risk Level", "Component Analysis", "Category Comparison"],
+                "algorithm": "Unified LDI 2.0 FINAL + Optimized Weights"
             },
             "risk_assessment_dashboard": {
-                "description": "综合风险评估仪表板",
-                "components": ["风险热图", "时间趋势", "同类对比", "监管建议"],
-                "interactivity": "用户可选择类别、时间范围、对比维度"
+                "description": "Comprehensive risk assessment dashboard",
+                "components": ["Risk Heatmap", "Time Trends", "Category Comparison", "Regulatory Recommendations"],
+                "interactivity": "Users can select categories, time ranges, comparison dimensions"
             },
             "regulatory_guidance": {
-                "description": "智能监管建议生成",
-                "logic": "基于RSM模型和分层验证结果",
-                "recommendations": ["审查强度建议", "临床数据要求", "上市后监管"],
-                "customization": "可根据设备特征定制建议"
+                "description": "Intelligent regulatory recommendation generator",
+                "logic": "Based on RSM model and stratified validation results",
+                "recommendations": ["Review Intensity Advice", "Clinical Data Requirements", "Post-market Surveillance"],
+                "customization": "Customizable recommendations based on device characteristics"
             },
             "explainable_ai": {
-                "description": "XAI可解释性分析",
-                "techniques": ["特征贡献分析", "决策路径可视化", "反事实分析"],
-                "transparency": "完全透明的风险评估过程"
+                "description": "XAI explainable analysis",
+                "techniques": ["Feature Contribution Analysis", "Decision Path Visualization", "Counterfactual Analysis"],
+                "transparency": "Fully transparent risk assessment process"
             }
         }
         
-        # 2. 用户界面设计
-        print("  🎨 设计用户界面")
+        # 2. User interface design
+        print("  🎨 Designing user interface")
         
         web_app_spec["user_interfaces"] = {
             "main_dashboard": {
-                "layout": "三列布局",
-                "left_panel": ["设备搜索", "类别筛选", "参数输入"],
-                "center_panel": ["风险评估结果", "LDI可视化", "对比分析"],
-                "right_panel": ["监管建议", "解释性分析", "导出选项"]
+                "layout": "Three-column layout",
+                "left_panel": ["Device Search", "Category Filter", "Parameter Input"],
+                "center_panel": ["Risk Assessment Results", "LDI Visualization", "Comparison Analysis"],
+                "right_panel": ["Regulatory Recommendations", "Explanatory Analysis", "Export Options"]
             },
             "ldi_calculator_page": {
-                "input_section": ["基础信息", "数据输入", "权重调整"],
-                "output_section": ["LDI分数", "组件分解", "置信区间"],
-                "visualization": ["雷达图", "组件条形图", "历史趋势"]
+                "input_section": ["Basic Information", "Data Input", "Weight Adjustment"],
+                "output_section": ["LDI Score", "Component Breakdown", "Confidence Interval"],
+                "visualization": ["Radar Chart", "Component Bar Chart", "Historical Trends"]
             },
             "comparison_tool": {
-                "selection": ["多设备选择", "时间范围", "比较维度"],
-                "visualization": ["散点图", "箱线图", "热力图"],
-                "insights": ["统计显著性", "效应量", "实用解释"]
+                "selection": ["Multi-device Selection", "Time Range", "Comparison Dimensions"],
+                "visualization": ["Scatter Plot", "Box Plot", "Heatmap"],
+                "insights": ["Statistical Significance", "Effect Size", "Practical Interpretation"]
             },
             "policy_recommendations": {
                 "input": ["设备特征", "风险水平", "监管目标"],

@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """
-TracePredicate: 最终统一LDI分析
-Final Unified LDI Analysis using Complete FDA Dataset Summary
+TracePredicate: Final Unified LDI Analysis using Complete FDA Dataset Summary
 
-基于完整167,307条FDA记录的高效统一LDI分析
+Efficient unified LDI analysis based on complete 167,307 FDA records
 """
 
 import json
@@ -17,17 +16,17 @@ from typing import Dict, List, Tuple, Any
 import warnings
 warnings.filterwarnings('ignore')
 
-# 中文字体设置
-plt.rcParams['font.sans-serif'] = ['Arial Unicode MS', 'SimHei', 'DejaVu Sans']
+# Font settings for visualization
+plt.rcParams['font.sans-serif'] = ['Arial', 'DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
 
 class FinalUnifiedLDIAnalyzer:
-    """最终统一LDI分析器 - 基于完整FDA数据摘要"""
+    """Final Unified LDI Analyzer - Based on Complete FDA Dataset Summary"""
     
     def __init__(self):
-        """初始化分析器"""
-        self.complete_data_dir = Path("complete_fda_data")
-        self.results_dir = Path("unified_analysis_results")
+        """Initialize analyzer"""
+        self.complete_data_dir = Path("data/real_fda_dataset")
+        self.results_dir = Path("results/unified_analysis")
         self.results_dir.mkdir(exist_ok=True)
         
         # 统一的LDI方法论定义
